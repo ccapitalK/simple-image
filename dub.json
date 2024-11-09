@@ -1,0 +1,10 @@
+{
+    "authors": [
+        "sahan"
+    ],
+    "targetType": "library",
+    "copyright": "Copyright © 2024, sahan",
+    "description": "Library for images",
+    "license": "proprietary",
+    "name": "image"
+}
