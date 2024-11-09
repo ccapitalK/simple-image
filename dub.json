@@ -2,9 +2,10 @@
     "authors": [
         "sahan"
     ],
-    "targetType": "library",
+    "libs": ["img"],
     "copyright": "Copyright © 2024, sahan",
     "description": "Library for images",
     "license": "proprietary",
+    "targetType": "staticLibrary",
     "name": "image"
 }
