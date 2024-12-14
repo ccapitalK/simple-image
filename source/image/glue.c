@@ -1,2 +1,2 @@
-#include<img/stb_image.h>
-#include<img/stb_image_write.h>
+#include "../stb_image.h"
+#include "../stb_image_write.h"

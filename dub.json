@@ -2,7 +2,12 @@
     "authors": [
         "sahan"
     ],
-    "libs": ["img"],
+    "preBuildCommands": [
+        "gcc -c source/im.c -O3 -o source/im.o"
+    ],
+    "sourceFiles": [
+        "source/im.o"
+    ],
     "copyright": "Copyright © 2024, sahan",
     "description": "Library for images",
     "license": "proprietary",
