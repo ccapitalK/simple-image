@@ -3,7 +3,7 @@
         "sahan"
     ],
     "preBuildCommands": [
-        "gcc -c source/im.c -O3 -o source/im.o"
+        "make CFLAGS=-O2 source/im.o"
     ],
     "sourceFiles": [
         "source/im.o"
