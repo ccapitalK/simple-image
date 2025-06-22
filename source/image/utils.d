@@ -43,11 +43,16 @@ Image loadImageRgb(string filename) {
     // Load image, forcing 3 channels (RGB)
     ubyte* data = glue.stbi_load(filename.toStringz, &im.width, &im.height, &channels, 4);
 
-    enforce(data != null, () => format("Failed to load \"%s\": %s\n", filename, glue.stbi_failure_reason()));
+    enforce(data != null,
+        new Exception(format("Failed to load \"%s\": %s\n", filename, glue.stbi_failure_reason().fromStringz)));
     im.data[] = 0;
     im.data = data[0 .. 4 * im.width * im.height];
 
     return im;
+}
+
+unittest {
+    assertThrown(loadImageRgb("/tmp/doesn'texist"));
 }
 
 void writeImageRgb(string filename, Image* im) {
@@ -56,7 +61,7 @@ void writeImageRgb(string filename, Image* im) {
     foreach (y; 0 .. im.height) {
         foreach (x; 0 .. im.width) {
             auto start = 3 * (y * im.width + x);
-            data[start ..  start + 3] []= im.pixel(x, y);
+            data[start .. start + 3][] = im.pixel(x, y);
         }
     }
     switch (filename[$ - 4 .. $]) {
