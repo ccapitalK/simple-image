@@ -3,7 +3,7 @@ module image.utils;
 import std.exception;
 import std.string;
 
-import image.glue;
+import glue = _image_glue;
 
 struct Image {
     ubyte[] data;
@@ -41,9 +41,9 @@ Image loadImageRgb(string filename) {
     Image im;
     int channels;
     // Load image, forcing 3 channels (RGB)
-    ubyte* data = stbi_load(filename.toStringz, &im.width, &im.height, &channels, 4);
+    ubyte* data = glue.stbi_load(filename.toStringz, &im.width, &im.height, &channels, 4);
 
-    enforce(data != null, () => format("Failed to load \"%s\": %s\n", filename, stbi_failure_reason()));
+    enforce(data != null, () => format("Failed to load \"%s\": %s\n", filename, glue.stbi_failure_reason()));
     im.data[] = 0;
     im.data = data[0 .. 4 * im.width * im.height];
 
@@ -61,13 +61,13 @@ void writeImageRgb(string filename, Image* im) {
     }
     switch (filename[$ - 4 .. $]) {
     case ".bmp":
-        stbi_write_bmp(filename.toStringz, im.width, im.height, 3, data.ptr);
+        glue.stbi_write_bmp(filename.toStringz, im.width, im.height, 3, data.ptr);
         break;
     case ".jpg":
-        stbi_write_jpg(filename.toStringz, im.width, im.height, 3, data.ptr, 99);
+        glue.stbi_write_jpg(filename.toStringz, im.width, im.height, 3, data.ptr, 99);
         break;
     case ".png":
-        stbi_write_png(filename.toStringz, im.width, im.height, 3, data.ptr, im.width * 3);
+        glue.stbi_write_png(filename.toStringz, im.width, im.height, 3, data.ptr, im.width * 3);
         break;
     default:
         enforce(false, "Unknown file extension");

@@ -2,4 +2,4 @@ module image;
 
 public import 
     image.utils,
-    image.glue;
+    _image_glue;

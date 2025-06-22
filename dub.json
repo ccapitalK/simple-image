@@ -3,14 +3,15 @@
         "sahan"
     ],
     "preBuildCommands": [
-        "make CFLAGS=-O2 source/im.o"
+        "make CFLAGS=-O2 source/image_glue_impl.o"
     ],
     "sourceFiles": [
-        "source/im.o"
+        "source/image_glue_impl.o"
     ],
     "copyright": "Copyright © 2024, sahan",
     "description": "Library for images",
     "license": "proprietary",
     "targetType": "staticLibrary",
+    "version": "0.1.1",
     "name": "image"
 }
