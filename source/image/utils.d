@@ -17,6 +17,13 @@ struct Image {
         data.length = width * height * 4;
     }
 
+    this(size_t width, size_t height, ubyte[] data) {
+        enforce(data.length == width * height * 4);
+        this.width = cast(int) width;
+        this.height = cast(int) height;
+        this.data = data;
+    }
+
     Image dup() const {
         auto im2 = Image(width, height);
         im2.data.length = data.length;
@@ -35,18 +42,38 @@ struct Image {
         auto start = 4 * (y * width + x);
         return data[start .. start + 3];
     }
+
+    ubyte *unsafeGetBufPtr() => data.ptr;
 }
 
-Image loadImageRgb(string filename) {
+enum AllocationStrategy {
+    gc,
+    malloc,
+}
+
+struct LoadImageConfig {
+    AllocationStrategy allocStrategy = AllocationStrategy.gc;
+}
+
+Image loadImageRgb(string filename, LoadImageConfig config = LoadImageConfig()) {
     Image im;
     int channels;
     // Load image, forcing 3 channels (RGB)
     ubyte* data = glue.stbi_load(filename.toStringz, &im.width, &im.height, &channels, 4);
 
+    // TODO: Pass in an allocator callback to stb, instead of copying
     enforce(data != null,
         new Exception(format("Failed to load \"%s\": %s\n", filename, glue.stbi_failure_reason().fromStringz)));
-    im.data[] = 0;
-    im.data = data[0 .. 4 * im.width * im.height];
+    final switch (config.allocStrategy) {
+    case AllocationStrategy.gc:
+        im.data = new ubyte[4 * im.width * im.height];
+        im.data[] = data[0 .. 4 * im.width * im.height];
+        glue.stbi_image_free(data);
+        break;
+    case AllocationStrategy.malloc:
+        im.data = data[0 .. 4 * im.width * im.height];
+        break;
+    }
 
     return im;
 }
