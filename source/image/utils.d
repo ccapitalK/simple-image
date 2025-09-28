@@ -6,6 +6,8 @@ import std.string;
 import glue = _image_glue;
 
 struct Image {
+    enum PIXEL_STRIDE = 4;
+    // Stored as rgba8 data internally
     ubyte[] data;
     // TODO: Make this const
     int width;
@@ -14,11 +16,11 @@ struct Image {
     this(size_t width, size_t height) {
         this.width = cast(int) width;
         this.height = cast(int) height;
-        data.length = width * height * 4;
+        data.length = width * height * PIXEL_STRIDE;
     }
 
     this(size_t width, size_t height, ubyte[] data) {
-        enforce(data.length == width * height * 4);
+        enforce(data.length == width * height * PIXEL_STRIDE);
         this.width = cast(int) width;
         this.height = cast(int) height;
         this.data = data;
@@ -33,13 +35,13 @@ struct Image {
 
     ubyte[] pixel(size_t x, size_t y) @nogc {
         assert(x < width && y < height);
-        auto start = 4 * (y * width + x);
+        auto start = PIXEL_STRIDE * (y * width + x);
         return data[start .. start + 3];
     }
 
     const(ubyte)[] pixel(size_t x, size_t y) const @nogc {
         assert(x < width && y < height);
-        auto start = 4 * (y * width + x);
+        auto start = PIXEL_STRIDE * (y * width + x);
         return data[start .. start + 3];
     }
 
@@ -59,19 +61,19 @@ Image loadImageRgb(string filename, LoadImageConfig config = LoadImageConfig()) 
     Image im;
     int channels;
     // Load image, forcing 3 channels (RGB)
-    ubyte* data = glue.stbi_load(filename.toStringz, &im.width, &im.height, &channels, 4);
+    ubyte* data = glue.stbi_load(filename.toStringz, &im.width, &im.height, &channels, Image.PIXEL_STRIDE);
 
     // TODO: Pass in an allocator callback to stb, instead of copying
     enforce(data != null,
         new Exception(format("Failed to load \"%s\": %s\n", filename, glue.stbi_failure_reason().fromStringz)));
     final switch (config.allocStrategy) {
     case AllocationStrategy.gc:
-        im.data = new ubyte[4 * im.width * im.height];
-        im.data[] = data[0 .. 4 * im.width * im.height];
+        im.data = new ubyte[Image.PIXEL_STRIDE * im.width * im.height];
+        im.data[] = data[0 .. Image.PIXEL_STRIDE * im.width * im.height];
         glue.stbi_image_free(data);
         break;
     case AllocationStrategy.malloc:
-        im.data = data[0 .. 4 * im.width * im.height];
+        im.data = data[0 .. Image.PIXEL_STRIDE * im.width * im.height];
         break;
     }
 
