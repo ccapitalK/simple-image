@@ -1,4 +1,4 @@
-module image.utils;
+module simple_image.utils;
 
 import std.exception;
 import std.string;
@@ -84,7 +84,7 @@ unittest {
     assertThrown(loadImageRgb("/tmp/doesn'texist"));
 }
 
-void writeImageRgb(string filename, Image* im) {
+void writeImageRgb(Image im, string filename) {
     ubyte[] data;
     data.length = im.width * im.height * 3;
     foreach (y; 0 .. im.height) {

@@ -1,6 +1,6 @@
 {
     "authors": [
-        "sahan"
+        "Sahan Fernando"
     ],
     "preBuildCommands": [
         "make CFLAGS=-O2 source/image_glue_impl.o"
@@ -8,10 +8,10 @@
     "sourceFiles": [
         "source/image_glue_impl.o"
     ],
-    "copyright": "Copyright © 2024, sahan",
-    "description": "Library for images",
-    "license": "proprietary",
+    "copyright": "Copyright © 2024-2025, Sahan Fernando",
+    "description": "Opinionated D wrapper library for stb_image",
+    "license": "MIT",
     "targetType": "staticLibrary",
-    "version": "0.1.3",
-    "name": "image"
+    "version": "0.2.0",
+    "name": "simple-image"
 }
