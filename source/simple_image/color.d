@@ -8,7 +8,7 @@ private T clamp(T)(T v, T min, T max) => v < min ? min : (v > max ? max : v);
 immutable float[3] REC709_GRAYSCALE_WEIGHTS = [0.2126, 0.7152, 0.0722];
 
 /// Perceputal greyscale luminance of color. NEEDS TO BE IN LINEAR COLOR SPACE, DON'T USE ON SRGB.
-float luminanceLinear(float[3] v) pure nothrow @nogc @safe {
+float luminanceFromLinear(float[3] v) pure nothrow @nogc @safe {
     float x = 0;
     foreach (i; 0 .. 3) {
         x += REC709_GRAYSCALE_WEIGHTS[i] * v[i];
@@ -16,9 +16,10 @@ float luminanceLinear(float[3] v) pure nothrow @nogc @safe {
     return x;
 }
 
-/// Perceptual greyscale luminance of srgb color (color space that 
+/// Perceptual greyscale luminance of srgb color (color space that images are normally encoded in). Output is in
+/// linear (0 - 1) color space
 float luminance(ubyte[3] srgbColors) pure nothrow @nogc @safe {
-    return luminanceLinear([
+    return luminanceFromLinear([
         srgbColors[0].srgbUnormToLinearF32,
         srgbColors[1].srgbUnormToLinearF32,
         srgbColors[2].srgbUnormToLinearF32,
