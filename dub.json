@@ -12,6 +12,5 @@
     "description": "Opinionated D wrapper library for stb_image",
     "license": "MIT",
     "targetType": "staticLibrary",
-    "version": "0.2.0",
     "name": "simple-image"
 }
