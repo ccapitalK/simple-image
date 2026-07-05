@@ -38,7 +38,7 @@ float unormToF32(ubyte v) pure nothrow @nogc @safe {
 /// This is the convention for 8 bit color representation that almost all graphics apis/libraries have converged on.
 /// Agnostic of color space.
 ubyte f32ToUnorm(float v) pure nothrow @nogc @safe {
-    return cast(ubyte) (v.clamp(0, 1) * 255).round();
+    return cast(ubyte)(v.clamp(0, 1) * 255).round();
 }
 
 /// Convert a color value (0 - 1) in srgb space to the matching value in linear color space.
@@ -54,7 +54,17 @@ float srgbToLinear(float v) pure nothrow @nogc @safe {
 }
 
 /// Decode an srgb unorm value (the normal convention for colors at rest) to linear floating point
-float srgbUnormToLinearF32(ubyte c) pure nothrow @nogc @safe => c.unormToF32().srgbToLinear();
+float srgbUnormToLinearF32(ubyte c) pure nothrow @nogc @safe {
+    // Use a look up table for this, only 256 values
+    static immutable LUT = {
+        float[256] arr;
+        foreach (ubyte i; 0 .. 256) {
+            arr[i] = i.unormToF32().srgbToLinear();
+        }
+        return arr;
+    }();
+    return LUT[c];
+}
 
 /// Convert a color value (0 - 1) in linear space to the matching value in srgb color space.
 float linearToSrgb(float v) pure nothrow @nogc @safe {
