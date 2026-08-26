@@ -33,16 +33,32 @@ struct Image {
         return im2;
     }
 
+    /// Get the pixel at (x, y), as an RGB tuple
     ubyte[] pixel(size_t x, size_t y) @nogc {
         assert(x < width && y < height);
         auto start = PIXEL_STRIDE * (y * width + x);
         return data[start .. start + 3];
     }
 
+    /// Get the pixel at (x, y), as an RGB tuple
     const(ubyte)[] pixel(size_t x, size_t y) const @nogc {
         assert(x < width && y < height);
         auto start = PIXEL_STRIDE * (y * width + x);
         return data[start .. start + 3];
+    }
+
+    /// Get the pixel at (x, y), as an RGBA tuple
+    ubyte[] pixelRGBA(size_t x, size_t y) @nogc {
+        assert(x < width && y < height);
+        auto start = PIXEL_STRIDE * (y * width + x);
+        return data[start .. start + 4];
+    }
+
+    /// Get the pixel at (x, y), as an RGBA tuple
+    const(ubyte)[] pixelRGBA(size_t x, size_t y) const @nogc {
+        assert(x < width && y < height);
+        auto start = PIXEL_STRIDE * (y * width + x);
+        return data[start .. start + 4];
     }
 
     ubyte *unsafeGetBufPtr() => data.ptr;
